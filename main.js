@@ -4,8 +4,31 @@ const tColores = {
     VERDE: 2,
     DORADO: 3,
 };
-
+const readline = require("readline");
 const MAX_COLORES_SEQ = 12;
+
+function pregunta(rl, texto) {
+    return new Promise((resolve) => {
+        rl.question(texto, resolve);
+    });
+}
+
+async function main() {
+    process.stdin.resume();
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    });
+
+    console.log("¡Bienvenido a Simon dice!");
+    const nombre = await pregunta(rl, "¿Cuál es tu nombre? ");
+    console.log(`Hola ${nombre}, pulsa una tecla para empezar a jugar.`);
+
+    await pregunta(rl, "");
+    await comenzarJuego(nombre, rl);
+
+    rl.close();
+}
 
 function charToColor(color) {
     let colorAProbar = color.toLowerCase();
@@ -74,11 +97,13 @@ function comprobarColor(secuenciaColores, indice, color) {
     }
 }
 
-function mostrarSecuencia ( secuenciaColores , numero ) {
-    process.stdout.write("Secuencia numero " + numero + ": ")
+function mostrarSecuencia(secuenciaColores, numero) {
+    console.log("Secuencia numero " + numero + ": ")
     for (let i = 0; i < numero; i++) {
-        process.stdout.write(secuenciaColores[i] + " - " + secuenciaColores[i]+ " - " + secuenciaColores[i])
+        console.log(secuenciaColores[i])
     }
 }
 
-mostrarSecuencia(generarSecuencia(4), 4)
+async function comenzarJuego ( nombre , rl ) {
+    generarSecuencia(4);
+}
