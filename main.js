@@ -4,6 +4,7 @@ const tColores = {
     VERDE: 2,
     DORADO: 3,
 };
+
 const readline = require("readline");
 const MAX_COLORES_SEQ = 12;
 
@@ -80,13 +81,13 @@ function intToColor(numero) {
 
 function tColorToString(color) {
     switch (color) {
-        case color = tColores.ROJO:
+        case (color = tColores.ROJO):
             return "Rojo";
-        case color = tColores.AZUL:
+        case (color = tColores.AZUL):
             return "Azul";
-        case color = tColores.VERDE:
+        case (color = tColores.VERDE):
             return "Verde";
-        case color = tColores.DORADO:
+        case (color = tColores.DORADO):
             return "Dorado";
         default:
             return null;
@@ -113,12 +114,55 @@ function comprobarColor(secuenciaColores, indice, color) {
 }
 
 function mostrarSecuencia(secuenciaColores, numero) {
-    console.log("Secuencia numero " + numero + ": ")
+    console.log("Secuencia numero " + (numero - 2) + ":");
     for (let i = 0; i < numero; i++) {
-        console.log(secuenciaColores[i])
+        console.log(secuenciaColores[i]);
     }
 }
 
-async function comenzarJuego ( nombre , rl ) {
-    generarSecuencia(4);
+async function comenzarJuego(nombre, rl) {
+    let secuenciaCompleta = generarSecuencia(4);
+
+    let i = 0;
+    let continuar = true;
+
+    let numColoresMostrar = 3;
+
+    let coloresUser = [];
+    let colorCorrecto = [];
+    let contadorColoresCorrectos = 0;
+
+    while (continuar && i < MAX_COLORES_SEQ) {
+        mostrarSecuencia(secuenciaCompleta, numColoresMostrar);
+
+        console.log("Memoriza la secuencia y pulsa Enter para continuar ...");
+        await pregunta(rl, "");
+        console.clear();
+
+        console.log( nombre + ", introduce la secuencia de " + numColoresMostrar + " colores :");
+        console.log("(R = Rojo, V = Verde, A = Azul, D = Dorado)");
+
+        for (let j = 0; j < numColoresMostrar; j++) {
+            coloresUser[j] = tColorToString(intToColor(charToColor(await pregunta(rl, "Color " + (j+1) + ": "))))
+        }
+
+        for (let j = 0; j < numColoresMostrar; j++) {
+            colorCorrecto[j] = comprobarColor(coloresUser, j, secuenciaCompleta[j]);
+        }
+
+        for (let x of colorCorrecto) {
+            if (x) {
+                contadorColoresCorrectos++;
+            }
+        }
+
+        if (contadorColoresCorrectos == numColoresMostrar) {
+            console.log("Enhorabuena , has acertado la secuencia numero " + (numColoresMostrar - 2) + "\n");
+            numColoresMostrar++;
+        } else {
+            continuar = false;
+        }
+    }
 }
+
+main().catch(console.error);
