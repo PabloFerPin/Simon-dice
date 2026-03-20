@@ -172,4 +172,4 @@ async function comenzarJuego(nombre, rl) {
     }
 }
 
-main()
+main().catch(console.error)

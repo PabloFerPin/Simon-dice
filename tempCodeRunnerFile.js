@@ -1,1 +1,0 @@
-(R = Rojo, V = Verde, A = Azul, D = Dorado)
