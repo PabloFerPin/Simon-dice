@@ -60,16 +60,16 @@ function intToColor(numero) {
 
     switch (numero) {
         case 0:
-            colorADevolver = "Rojo";
+            colorADevolver = tColores.ROJO;
             break;
         case 1:
-            colorADevolver = "Azul";
+            colorADevolver = tColores.AZUL;
             break;
         case 2:
-            colorADevolver = "Verde";
+            colorADevolver = tColores.VERDE;
             break;
         case 3:
-            colorADevolver = "Dorado";
+            colorADevolver = tColores.DORADO;
             break;
         default:
             break;
@@ -78,12 +78,27 @@ function intToColor(numero) {
     return colorADevolver;
 }
 
+function tColorToString(color) {
+    switch (color) {
+        case color = tColores.ROJO:
+            return "Rojo";
+        case color = tColores.AZUL:
+            return "Azul";
+        case color = tColores.VERDE:
+            return "Verde";
+        case color = tColores.DORADO:
+            return "Dorado";
+        default:
+            return null;
+    }
+}
+
 function generarSecuencia(numColores) {
     let arrayRandom = [];
 
     for (let i = 0; i < MAX_COLORES_SEQ; i++) {
         let random = parseInt(Math.random() * numColores);
-        arrayRandom.push(intToColor(random));
+        arrayRandom.push(tColorToString(intToColor(random)));
     }
 
     return arrayRandom;
