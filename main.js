@@ -6,7 +6,7 @@ const tColores = {
 };
 
 const readline = require("readline");
-const MAX_COLORES_SEQ = 12;
+const MAX_COLORES_SEQ = 6;
 
 function pregunta(rl, texto) {
     return new Promise((resolve) => {
@@ -132,7 +132,7 @@ async function comenzarJuego(nombre, rl) {
     let colorCorrecto = [];
     let contadorColoresCorrectos = 0;
 
-    while (continuar && i < MAX_COLORES_SEQ) {
+    while (continuar && i < (MAX_COLORES_SEQ-2)) {
         mostrarSecuencia(secuenciaCompleta, numColoresMostrar);
 
         console.log("Memoriza la secuencia y pulsa Enter para continuar ...");
@@ -158,11 +158,18 @@ async function comenzarJuego(nombre, rl) {
 
         if (contadorColoresCorrectos == numColoresMostrar) {
             console.log("Enhorabuena , has acertado la secuencia numero " + (numColoresMostrar - 2) + "\n");
-            numColoresMostrar++;
         } else {
             continuar = false;
         }
+
+        numColoresMostrar++;
+        i++;
+        contadorColoresCorrectos = 0;
+    }
+
+    if (i >= (MAX_COLORES_SEQ-2)) {
+        console.log("Has ganado")
     }
 }
 
-main().catch(console.error);
+main()
