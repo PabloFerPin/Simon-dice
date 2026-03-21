@@ -6,7 +6,7 @@ const tColores = {
 };
 
 const readline = require("readline");
-const MAX_COLORES_SEQ = 6;
+const MAX_COLORES_SEQ = 5;
 
 function pregunta(rl, texto) {
     return new Promise((resolve) => {
@@ -159,6 +159,7 @@ async function comenzarJuego(nombre, rl) {
         if (contadorColoresCorrectos == numColoresMostrar) {
             console.log("Enhorabuena , has acertado la secuencia numero " + (numColoresMostrar - 2) + "\n");
         } else {
+            console.log("Has perdido...")
             continuar = false;
         }
 
@@ -168,7 +169,7 @@ async function comenzarJuego(nombre, rl) {
     }
 
     if (i >= (MAX_COLORES_SEQ-2)) {
-        console.log("Has ganado")
+        console.log("Has ganado!!!")
     }
 }
 
