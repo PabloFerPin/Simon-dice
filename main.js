@@ -106,7 +106,7 @@ function generarSecuencia(numColores) {
 }
 
 function comprobarColor(secuenciaColores, indice, color) {
-    if (secuenciaColores[indice] == color) {
+    if (color == secuenciaColores[indice]) {
         return true;
     } else {
         return false;
@@ -127,6 +127,7 @@ async function comenzarJuego(nombre, rl) {
     let continuar = true;
 
     let numColoresMostrar = 3;
+    let numIteraciones = 0
 
     let coloresUser = [];
     let colorCorrecto = [];
@@ -142,6 +143,7 @@ async function comenzarJuego(nombre, rl) {
         console.log( nombre + ", introduce la secuencia de " + numColoresMostrar + " colores :");
         console.log("(R = Rojo, V = Verde, A = Azul, D = Dorado)");
 
+        
         for (let j = 0; j < numColoresMostrar; j++) {
             coloresUser[j] = tColorToString(intToColor(charToColor(await pregunta(rl, "Color " + (j+1) + ": "))))
         }
@@ -149,7 +151,7 @@ async function comenzarJuego(nombre, rl) {
         for (let j = 0; j < numColoresMostrar; j++) {
             colorCorrecto[j] = comprobarColor(coloresUser, j, secuenciaCompleta[j]);
         }
-
+        
         for (let x of colorCorrecto) {
             if (x) {
                 contadorColoresCorrectos++;
@@ -162,10 +164,25 @@ async function comenzarJuego(nombre, rl) {
             console.log("Has perdido...")
             continuar = false;
         }
+        
+        /*
+        while (continuar && numIteraciones < numColoresMostrar) {
+            let numIteraciones = 0
+            let colorUser = tColorToString(intToColor(charToColor(await pregunta(rl, "Color " + (numIteraciones+1) + ": "))))
+            let colorUserCorrecto = comprobarColor(secuenciaCompleta, numIteraciones, colorUser)
+            
+            if (!colorUserCorrecto) {
+                console.log("Has perdido...")
+                continuar = false
+            }
 
+            numIteraciones++
+        }
+        */
+        console.log("Enhorabuena , has acertado la secuencia numero " + (numColoresMostrar - 2) + "\n");
         numColoresMostrar++;
         i++;
-        contadorColoresCorrectos = 0;
+        //contadorColoresCorrectos = 0;
     }
 
     if (i >= (MAX_COLORES_SEQ-2)) {
