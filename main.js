@@ -81,13 +81,13 @@ function intToColor(numero) {
 
 function tColorToString(color) {
     switch (color) {
-        case (color = tColores.ROJO):
+        case tColores.ROJO:
             return "Rojo";
-        case (color = tColores.AZUL):
+        case tColores.AZUL:
             return "Azul";
-        case (color = tColores.VERDE):
+        case tColores.VERDE:
             return "Verde";
-        case (color = tColores.DORADO):
+        case tColores.DORADO:
             return "Dorado";
         default:
             return null;
@@ -124,68 +124,45 @@ async function comenzarJuego(nombre, rl) {
     let secuenciaCompleta = generarSecuencia(4);
 
     let i = 0;
+    let j = 0
+    let rondasGanadas = 0
     let continuar = true;
-
     let numColoresMostrar = 3;
-    let numIteraciones = 0
 
-    let coloresUser = [];
-    let colorCorrecto = [];
-    let contadorColoresCorrectos = 0;
-
-    while (continuar && i < (MAX_COLORES_SEQ-2)) {
+    while (continuar && i < (MAX_COLORES_SEQ - 2)) {
         mostrarSecuencia(secuenciaCompleta, numColoresMostrar);
 
         console.log("Memoriza la secuencia y pulsa Enter para continuar ...");
         await pregunta(rl, "");
         console.clear();
 
-        console.log( nombre + ", introduce la secuencia de " + numColoresMostrar + " colores :");
+        console.log(nombre + ", introduce la secuencia de " + numColoresMostrar + " colores :");
         console.log("(R = Rojo, V = Verde, A = Azul, D = Dorado)");
 
-        
-        for (let j = 0; j < numColoresMostrar; j++) {
-            coloresUser[j] = tColorToString(intToColor(charToColor(await pregunta(rl, "Color " + (j+1) + ": "))))
-        }
+        j = 0
+        while (continuar && j < numColoresMostrar) {
+            let coloresUser = tColorToString(intToColor(charToColor(await pregunta(rl, "Color " + (j + 1) + ": "))))
+            let colorCorrecto = comprobarColor(secuenciaCompleta, j, coloresUser);
 
-        for (let j = 0; j < numColoresMostrar; j++) {
-            colorCorrecto[j] = comprobarColor(coloresUser, j, secuenciaCompleta[j]);
-        }
-        
-        for (let x of colorCorrecto) {
-            if (x) {
-                contadorColoresCorrectos++;
-            }
-        }
-
-        if (contadorColoresCorrectos == numColoresMostrar) {
-            console.log("Enhorabuena , has acertado la secuencia numero " + (numColoresMostrar - 2) + "\n");
-        } else {
-            console.log("Has perdido...")
-            continuar = false;
-        }
-        
-        /*
-        while (continuar && numIteraciones < numColoresMostrar) {
-            let numIteraciones = 0
-            let colorUser = tColorToString(intToColor(charToColor(await pregunta(rl, "Color " + (numIteraciones+1) + ": "))))
-            let colorUserCorrecto = comprobarColor(secuenciaCompleta, numIteraciones, colorUser)
-            
-            if (!colorUserCorrecto) {
-                console.log("Has perdido...")
+            if (!(colorCorrecto)) {
+                j = 0
                 continuar = false
+                console.log("Has perdido...")
             }
 
-            numIteraciones++
+            j++
         }
-        */
-        console.log("Enhorabuena , has acertado la secuencia numero " + (numColoresMostrar - 2) + "\n");
+        
+        if (j >= numColoresMostrar) {
+            console.log("Enhorabuena , has acertado la secuencia numero " + (numColoresMostrar - 2) + "\n");
+            rondasGanadas++
+        }
+
         numColoresMostrar++;
         i++;
-        //contadorColoresCorrectos = 0;
     }
 
-    if (i >= (MAX_COLORES_SEQ-2)) {
+    if (rondasGanadas >= (MAX_COLORES_SEQ - 2)) {
         console.log("Has ganado!!!")
     }
 }
