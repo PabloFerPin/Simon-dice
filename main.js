@@ -6,7 +6,7 @@ const tColores = {
 };
 
 const readline = require("readline");
-const MAX_COLORES_SEQ = 5;
+const MAX_COLORES_SEQ = 12;
 
 function pregunta(rl, texto) {
     return new Promise((resolve) => {
