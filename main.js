@@ -125,8 +125,9 @@ async function comenzarJuego(nombre, rl) {
 
     let i = 0;
     let j = 0
-    let rondasGanadas = 0
     let continuar = true;
+
+    let rondasGanadas = 0
     let numColoresMostrar = 3;
 
     while (continuar && i < (MAX_COLORES_SEQ - 2)) {
@@ -141,10 +142,9 @@ async function comenzarJuego(nombre, rl) {
 
         j = 0
         while (continuar && j < numColoresMostrar) {
-            let coloresUser = tColorToString(intToColor(charToColor(await pregunta(rl, "Color " + (j + 1) + ": "))))
-            let colorCorrecto = comprobarColor(secuenciaCompleta, j, coloresUser);
+            let colorUser = tColorToString(intToColor(charToColor(await pregunta(rl, "Color " + (j + 1) + ": "))))
 
-            if (!(colorCorrecto)) {
+            if (!(comprobarColor(secuenciaCompleta, j, colorUser))) {
                 j = 0
                 continuar = false
                 console.log("Has perdido...")
