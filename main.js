@@ -3,10 +3,21 @@ const tColores = {
     AZUL: 1,
     VERDE: 2,
     DORADO: 3,
+    BLANCO: 4,
+    MARRON: 5,
+    NARANJA: 6
 };
 
+const tModo = {
+    FACIL: 0,
+    DIFICIL: 1,
+}
+
 const readline = require("readline");
-const MAX_COLORES_SEQ = 12;
+const MAX_COLORES_SEQ = 15;
+const numAyudas = 3;
+const MAX_COLORES_FACIL = 4;
+const MAX_COLORES_DIFICIL = 7;
 
 function pregunta(rl, texto) {
     return new Promise((resolve) => {
@@ -23,10 +34,12 @@ async function main() {
 
     console.log("¡Bienvenido a Simon dice!");
     const nombre = await pregunta(rl, "¿Cuál es tu nombre? ");
-    console.log(`Hola ${nombre}, pulsa una tecla para empezar a jugar.`);
+    console.log(`Hola ${nombre}! \n\nElije una opción para continuar:\n0: Salir \n1: Jugar en modo sencillo. \n2: Jugar en modo dificil.`);
+    const nivelDificultad = await pregunta(rl, "Opcion: ")
+    console.log(`Pulsa una tecla para empezar a jugar.`);
 
     await pregunta(rl, "");
-    await comenzarJuego(nombre, rl);
+    await comenzarJuego(nombre, rl, nivelDificultad);
 
     rl.close();
 }
@@ -120,7 +133,11 @@ function mostrarSecuencia(secuenciaColores, numero) {
     }
 }
 
-async function comenzarJuego(nombre, rl) {
+function utilizarAyuda(secuenciaColores, indice, numAyudas) {
+    
+}
+
+async function comenzarJuego(nombre, rl, nivelDificultad) {
     let secuenciaCompleta = generarSecuencia(4);
 
     let i = 0;
