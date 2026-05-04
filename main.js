@@ -9,8 +9,8 @@ const tColores = {
 };
 
 const tModo = {
-    FACIL: 0,
-    DIFICIL: 1,
+    FACIL: 1,
+    DIFICIL: 2,
 }
 
 const readline = require("readline");
@@ -40,11 +40,11 @@ async function main() {
     while(continuar) {
         let nivelDificultad = await pregunta(rl, "Opcion: ")
         switch(parseInt(nivelDificultad)) {
-            case 1:
+            case tModo.FACIL:
                 var numColores = MAX_COLORES_FACIL
                 continuar = false;
                 break
-            case 2:
+            case tModo.DIFICIL:
                 numColores = MAX_COLORES_DIFICIL
                 continuar = false;
                 break
@@ -56,13 +56,13 @@ async function main() {
     console.log(`Pulsa una tecla para empezar a jugar.`);
 
     await pregunta(rl, "");
-    await comenzarJuego(nombre, rl, NUM_AYUDAS, numColores);
+    await comenzarJuego(nombre, rl, numColores, NUM_AYUDAS);
 
     rl.close();
 }
 
 function charToColor(color) {
-    switch (colorAProbar.toLowerCase()) {
+    switch (color.toLowerCase()) {
         case "r":
             return tColores.ROJO;
         case "a":
@@ -152,7 +152,7 @@ function mostrarSecuencia(secuenciaColores, numero) {
 
 function utilizarAyuda(secuenciaColores, indice, numAyudas) {
     if (numAyudas > 0) {
-        console.log("El siguiente color es el ${secuenciaColores[indice]}. Te quedan ${numAyudas} ayudas!")
+        console.log("El siguiente color es el " + secuenciaColores[indice] + ". Te quedan " + (numAyudas - 1) + " ayudas!")
         return true;
     } else {
         console.log("No dispones de más ayudas.")
@@ -177,21 +177,27 @@ async function comenzarJuego(nombre, rl, numColores, numAyudas) {
         console.clear();
 
         if(numColores == 4) {
-            console.log(nombre + ", introduce la secuencia de " + numColoresMostrar + " colores :");
-            console.log("(R = Rojo, V = Verde, A = Azul, D = Dorado)");
+            console.log(nombre + ", introduce la secuencia de " + numColoresMostrar + " colores : \n(R = Rojo, V = Verde, A = Azul, D = Dorado, x = Ayuda)");
         } else {
-            console.log(nombre + ", introduce la secuencia de " + numColoresMostrar + " colores :");
-            console.log("(R = Rojo, V = Verde, A = Azul, D = Dorado, B = Blanco, M = Marron, N = Naranaja)");
+            console.log(nombre + ", introduce la secuencia de " + numColoresMostrar + " colores : \n(R = Rojo, V = Verde, A = Azul, D = Dorado, B = Blanco, M = Marron, N = Naranaja, x = Ayuda)");
         }
 
         let j = 0
         while (continuar && j < numColoresMostrar) {
-            let colorUser = tColorToString(intToColor(charToColor(await pregunta(rl, "Color " + (j + 1) + ": "))))
+            let colorUserSinProcesar = await pregunta(rl, "Color " + (j + 1) + ": ")
 
-            if (!(comprobarColor(secuenciaCompleta, j, colorUser))) {
-                j = 0
-                continuar = false
-                console.log("Has perdido...")
+            if(colorUserSinProcesar.toLocaleLowerCase() === "x" && utilizarAyuda(secuenciaCompleta, j, numAyudas)) {
+                numAyudas--
+                j--
+            } else if (!(colorUserSinProcesar.toLocaleLowerCase() === "x")){
+                let colorUserProcesado = tColorToString(intToColor(charToColor(colorUserSinProcesar)))
+                if (!(comprobarColor(secuenciaCompleta, j, colorUserProcesado))) {
+                    j = 0
+                    continuar = false
+                    console.log("Has perdido...")
+                }
+            } else {
+                j--
             }
 
             j++
