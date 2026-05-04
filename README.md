@@ -1,12 +1,14 @@
-# 🎮 Simon Dice v1
+# 🎮 Simon Dice v2
 
-> Un juego de memoria clásico para la terminal, construido en Node.js.
+> Un juego de memoria clásico para la terminal, ahora con modo difícil y sistema de ayudas.
 
 ---
 
 ## ¿Qué es esto?
 
 **Simon Dice** es la versión en consola del famoso juego de memoria. El juego te muestra una secuencia de colores que va creciendo cada ronda — tú tienes que memorizarla y reproducirla correctamente. Un fallo y se acabó.
+
+La v2 añade un **modo difícil** con más colores, más rondas, y un **sistema de ayudas** para cuando la memoria falla.
 
 ---
 
@@ -22,22 +24,75 @@ No necesita ninguna dependencia externa. Solo Node.js y la terminal.
 
 ---
 
+## 🕹️ Modos de juego
+
+| Modo       | Colores disponibles | Rondas |
+|------------|---------------------|--------|
+| 🟢 Sencillo | 4                   | 4      |
+| 🔴 Difícil  | 7                   | 4      |
+
+Al iniciar, el juego te pedirá elegir:
+
+```
+0: Salir
+1: Jugar en modo sencillo
+2: Jugar en modo difícil
+```
+
+---
+
 ## 🎯 Cómo se juega
 
 1. Introduce tu nombre al iniciar.
-2. El juego te muestra una secuencia de colores.
-3. Memorízala, pulsa **Enter** para ocultarla.
-4. Introduce los colores en orden usando las teclas:
+2. Elige el modo de juego.
+3. El juego te muestra una secuencia de colores.
+4. Memorízala y pulsa **Enter** para ocultarla.
+5. Introduce los colores en orden usando las teclas:
 
-| Tecla | Color  |
-|-------|--------|
+### Modo sencillo
+
+| Tecla | Color    |
+|-------|----------|
 | `R`   | 🔴 Rojo   |
 | `A`   | 🔵 Azul   |
 | `V`   | 🟢 Verde  |
 | `D`   | 🟡 Dorado |
+| `X`   | 💡 Ayuda  |
 
-5. Cada ronda la secuencia crece en un color.
-6. Supera todas las rondas para ganar.
+### Modo difícil
+
+| Tecla | Color     |
+|-------|-----------|
+| `R`   | 🔴 Rojo    |
+| `A`   | 🔵 Azul    |
+| `V`   | 🟢 Verde   |
+| `D`   | 🟡 Dorado  |
+| `B`   | ⚪ Blanco  |
+| `M`   | 🟤 Marrón  |
+| `N`   | 🟠 Naranja |
+| `X`   | 💡 Ayuda   |
+
+---
+
+## 💡 Sistema de ayudas
+
+Cada partida dispone de **3 ayudas**. Para usarla, introduce `X` cuando te toque un color — la máquina te revelará cuál es el siguiente.
+
+```
+Color 3: x
+El siguiente color es el Verde. Te quedan 2 ayudas!
+Color 3: v
+```
+
+Si ya no tienes ayudas disponibles:
+
+```
+Color 3: x
+No dispones de más ayudas.
+Color 3:
+```
+
+Las ayudas están disponibles en ambos modos de juego.
 
 ---
 
@@ -46,11 +101,12 @@ No necesita ninguna dependencia externa. Solo Node.js y la terminal.
 ```
 simon_dice.js
 │
-├── main()                → Punto de entrada, gestión del readline
+├── main()                → Punto de entrada, menú y selección de modo
 ├── comenzarJuego()       → Lógica principal del juego
-├── generarSecuencia()    → Genera la secuencia aleatoria de colores
+├── generarSecuencia()    → Genera la secuencia aleatoria según el modo
 ├── mostrarSecuencia()    → Muestra la secuencia por consola
 ├── comprobarColor()      → Valida cada color introducido
+├── utilizarAyuda()       → Gestiona el sistema de ayudas
 ├── charToColor()         → Convierte tecla → valor del enum
 ├── intToColor()          → Convierte número → valor del enum
 └── tColorToString()      → Convierte valor del enum → string
@@ -60,42 +116,11 @@ simon_dice.js
 
 ## ⚙️ Configuración
 
-En la parte superior del archivo puedes modificar:
-
 ```js
-const MAX_COLORES_SEQ = 12; // Número máximo de colores en la secuencia
-```
-
-Aumenta este valor para una experiencia más difícil.
-
----
-
-## 📋 Ejemplo de partida
-
-```
-¡Bienvenido a Simon Dice!
-¿Cuál es tu nombre? Pablo
-
-Hola Pablo, pulsa una tecla para empezar a jugar.
-
-Secuencia numero 1:
-Rojo
-Azul
-Verde
-
-Memoriza la secuencia y pulsa Enter para continuar ...
-
-Pablo, introduce la secuencia de 3 colores :
-(R = Rojo, V = Verde, A = Azul, D = Dorado)
-Color 1: r
-Color 2: a
-Color 3: v
-
-Enhorabuena, has acertado la secuencia numero 1
-
-...
-
-¡Has ganado!!!
+const MAX_COLORES_SEQ = 6;    // Longitud máxima de la secuencia
+const NUM_AYUDAS = 3;         // Ayudas disponibles por partida
+const MAX_COLORES_FACIL = 4;  // Colores en modo sencillo
+const MAX_COLORES_DIFICIL = 7;// Colores en modo difícil
 ```
 
 ---
@@ -110,8 +135,8 @@ Enhorabuena, has acertado la secuencia numero 1
 
 ## 👤 Autor
 
-Hecho por **Pablo** como práctica de lenguaje de marcas.
+Hecho por **Pablo** como práctica de programación.
 
 ---
 
-*Simon Dice v1 — porque la memoria también se entrena.*
+*Simon Dice v2 — ahora con más colores y menos excusas.*

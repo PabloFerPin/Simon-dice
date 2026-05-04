@@ -54,7 +54,6 @@ async function main() {
     }
 
     console.log(`Pulsa una tecla para empezar a jugar.`);
-
     await pregunta(rl, "");
     await comenzarJuego(nombre, rl, numColores, NUM_AYUDAS);
 
