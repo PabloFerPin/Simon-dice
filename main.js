@@ -15,7 +15,7 @@ const tModo = {
 
 const readline = require("readline");
 const MAX_COLORES_SEQ = 15;
-const numAyudas = 3;
+const NUM_AYUDAS = 3;
 const MAX_COLORES_FACIL = 4;
 const MAX_COLORES_DIFICIL = 7;
 
@@ -35,61 +35,72 @@ async function main() {
     console.log("¡Bienvenido a Simon dice!");
     const nombre = await pregunta(rl, "¿Cuál es tu nombre? ");
     console.log(`Hola ${nombre}! \n\nElije una opción para continuar:\n0: Salir \n1: Jugar en modo sencillo. \n2: Jugar en modo dificil.`);
-    const nivelDificultad = await pregunta(rl, "Opcion: ")
+
+    let continuar = true
+    while(continuar) {
+        let nivelDificultad = await pregunta(rl, "Opcion: ")
+        switch(parseInt(nivelDificultad)) {
+            case 1:
+                var numColores = MAX_COLORES_FACIL
+                continuar = false;
+                break
+            case 2:
+                numColores = MAX_COLORES_DIFICIL
+                continuar = false;
+                break
+            default:
+                console.log("Nivel de difucultad no valido, intentelo de nuevo")
+        }
+    }
+
     console.log(`Pulsa una tecla para empezar a jugar.`);
 
     await pregunta(rl, "");
-    await comenzarJuego(nombre, rl, nivelDificultad);
+    await comenzarJuego(nombre, rl, NUM_AYUDAS, numColores);
 
     rl.close();
 }
 
 function charToColor(color) {
-    let colorAProbar = color.toLowerCase();
-    let numADevolver;
-
-    switch (colorAProbar) {
+    switch (colorAProbar.toLowerCase()) {
         case "r":
-            numADevolver = tColores.ROJO;
-            break;
+            return tColores.ROJO;
         case "a":
-            numADevolver = tColores.AZUL;
-            break;
+            return tColores.AZUL;
         case "v":
-            numADevolver = tColores.VERDE;
-            break;
+            return tColores.VERDE;
         case "d":
-            numADevolver = tColores.DORADO;
-            break;
+            return tColores.DORADO;
+        case "b":
+            return tColores.BLANCO
+        case "m":
+            return tColores.MARRON
+        case "n":
+            return tColores.NARANJA
         default:
-            numADevolver = null;
-            break;
+            return null;
     }
-
-    return numADevolver;
 }
 
 function intToColor(numero) {
-    let colorADevolver;
-
     switch (numero) {
         case 0:
-            colorADevolver = tColores.ROJO;
-            break;
+            return tColores.ROJO;
         case 1:
-            colorADevolver = tColores.AZUL;
-            break;
+            return tColores.AZUL;
         case 2:
-            colorADevolver = tColores.VERDE;
-            break;
+            return tColores.VERDE;
         case 3:
-            colorADevolver = tColores.DORADO;
-            break;
+            return tColores.DORADO;
+        case 4:
+            return tColores.BLANCO
+        case 5:
+            return tColores.MARRON
+        case 6:
+            return tColores.NARANJA
         default:
-            break;
+            return null
     }
-
-    return colorADevolver;
 }
 
 function tColorToString(color) {
@@ -102,6 +113,12 @@ function tColorToString(color) {
             return "Verde";
         case tColores.DORADO:
             return "Dorado";
+        case tColores.BLANCO:
+            return "Blanco"
+        case tColores.MARRON:
+            return "Marron"
+        case tColores.NARANJA:
+            return "Naranja"
         default:
             return null;
     }
@@ -134,14 +151,19 @@ function mostrarSecuencia(secuenciaColores, numero) {
 }
 
 function utilizarAyuda(secuenciaColores, indice, numAyudas) {
-    
+    if (numAyudas > 0) {
+        console.log("El siguiente color es el ${secuenciaColores[indice]}. Te quedan ${numAyudas} ayudas!")
+        return true;
+    } else {
+        console.log("No dispones de más ayudas.")
+        return false;
+    }
 }
 
-async function comenzarJuego(nombre, rl, nivelDificultad) {
-    let secuenciaCompleta = generarSecuencia(4);
-
+async function comenzarJuego(nombre, rl, numColores, numAyudas) {
+    let secuenciaCompleta = generarSecuencia(numColores);
+    
     let i = 0;
-    let j = 0
     let continuar = true;
 
     let rondasGanadas = 0
@@ -154,10 +176,15 @@ async function comenzarJuego(nombre, rl, nivelDificultad) {
         await pregunta(rl, "");
         console.clear();
 
-        console.log(nombre + ", introduce la secuencia de " + numColoresMostrar + " colores :");
-        console.log("(R = Rojo, V = Verde, A = Azul, D = Dorado)");
+        if(numColores == 4) {
+            console.log(nombre + ", introduce la secuencia de " + numColoresMostrar + " colores :");
+            console.log("(R = Rojo, V = Verde, A = Azul, D = Dorado)");
+        } else {
+            console.log(nombre + ", introduce la secuencia de " + numColoresMostrar + " colores :");
+            console.log("(R = Rojo, V = Verde, A = Azul, D = Dorado, B = Blanco, M = Marron, N = Naranaja)");
+        }
 
-        j = 0
+        let j = 0
         while (continuar && j < numColoresMostrar) {
             let colorUser = tColorToString(intToColor(charToColor(await pregunta(rl, "Color " + (j + 1) + ": "))))
 
